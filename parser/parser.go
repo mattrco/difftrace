@@ -109,6 +109,8 @@ func (p *Parser) Parse() (*OutputLine, error) {
 						buf.WriteString(lit)
 					}
 				}
+			} else if tok == STRING {
+				line.Args = append(line.Args, lit)
 			} else if tok != SEP {
 				line.Args = append(line.Args, lit)
 			}

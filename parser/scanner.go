@@ -20,6 +20,7 @@ const (
 	CLOSE_PAREN // )
 	OPEN_BRACE  // {
 	CLOSE_BRACE // }
+	STRING      // Delimited by "
 	SEP         // ,
 	EQUALS      // =
 	SIGNAL      // ---
@@ -99,6 +100,8 @@ func (s *Scanner) Scan() (tok Token, lit string) {
 		} else {
 			s.unreadRune()
 		}
+	} else if r == '"' {
+		return s.scanString()
 	} else if isWhitespace(r) {
 		// Consume all contiguous whitespace.
 		s.unreadRune()
@@ -151,6 +154,26 @@ func (s *Scanner) scanAddress() (tok Token, lit string) {
 	}
 
 	return MEMADDR, buf.String()
+}
+
+// scanString consumes a string from the scanner.
+func (s *Scanner) scanString() (tok Token, lit string) {
+	var buf bytes.Buffer
+	buf.WriteRune('"')
+
+	// Read up to the next inverted comma.
+	for {
+		r := s.read()
+		if r == eof {
+			break
+		}
+		buf.WriteRune(r)
+		if r == '"' {
+			break
+		}
+	}
+
+	return STRING, buf.String()
 }
 
 // scanWhitespace consumes the current rune and all contiguous whitespace.
