@@ -71,7 +71,7 @@ func (p *Parser) Parse() (*OutputLine, error) {
 		var buf bytes.Buffer
 		buf.WriteString(lit)
 		for {
-			tok, lit = p.scanIgnoreWhitespace()
+			tok, lit = p.scan()
 			if tok == NEWLINE {
 				break
 			}
@@ -98,7 +98,7 @@ func (p *Parser) Parse() (*OutputLine, error) {
 				var buf bytes.Buffer
 				buf.WriteString(lit)
 				for {
-					tok, lit = p.scanIgnoreWhitespace()
+					tok, lit = p.scan()
 					if tok == CLOSE_BRACE {
 						buf.WriteString(lit)
 						line.Args = append(line.Args, buf.String())
