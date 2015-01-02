@@ -72,11 +72,10 @@ func (p *Parser) Parse() (*OutputLine, error) {
 		buf.WriteString(lit)
 		for {
 			tok, lit = p.scanIgnoreWhitespace()
-			if tok != NEWLINE {
-				buf.WriteString(lit)
-			} else {
+			if tok == NEWLINE {
 				break
 			}
+			buf.WriteString(lit)
 		}
 		line.Signal = buf.String()
 		return line, nil
