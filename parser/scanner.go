@@ -167,10 +167,19 @@ func (s *Scanner) scanString() (tok Token, lit string) {
 		if r == eof {
 			break
 		}
-		buf.WriteRune(r)
 		if r == '"' {
+			// Consume ellipsis if present.
+			if r = s.read(); r == '.' {
+				s.read()
+				s.read()
+				buf.WriteString("...")
+			} else {
+				s.unreadRune()
+			}
+			buf.WriteRune(r)
 			break
 		}
+		buf.WriteRune(r)
 	}
 
 	return STRING, buf.String()
