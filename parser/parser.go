@@ -109,6 +109,21 @@ func (p *Parser) Parse() (*OutputLine, error) {
 						buf.WriteString(lit)
 					}
 				}
+			} else if tok == OPEN_SQ {
+				var buf bytes.Buffer
+				buf.WriteString(lit)
+				for {
+					tok, lit = p.scan()
+					if tok == CLOSE_SQ {
+						buf.WriteString(lit)
+						line.Args = append(line.Args, buf.String())
+						break
+					} else if tok == MEMADDR {
+						buf.WriteString("0x0")
+					} else {
+						buf.WriteString(lit)
+					}
+				}
 			} else if tok == STRING {
 				line.Args = append(line.Args, lit)
 			} else if tok != SEP {

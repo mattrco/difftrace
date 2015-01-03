@@ -20,6 +20,9 @@ const (
 	CLOSE_PAREN // )
 	OPEN_BRACE  // {
 	CLOSE_BRACE // }
+	OPEN_SQ     // [
+	CLOSE_SQ    // ]
+	PIPE        // |
 	STRING      // Delimited by "
 	SEP         // ,
 	EQUALS      // =
@@ -36,7 +39,7 @@ func isWhitespace(ch rune) bool {
 }
 
 func isLetter(ch rune) bool {
-	return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z')
+	return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || ch == '|'
 }
 
 func isDigit(ch rune) bool {
@@ -126,6 +129,12 @@ func (s *Scanner) Scan() (tok Token, lit string) {
 		return OPEN_BRACE, string(r)
 	case '}':
 		return CLOSE_BRACE, string(r)
+	case '[':
+		return OPEN_SQ, string(r)
+	case ']':
+		return CLOSE_SQ, string(r)
+	case '|':
+		return PIPE, string(r)
 	case '=':
 		return EQUALS, string(r)
 	case '\n':
