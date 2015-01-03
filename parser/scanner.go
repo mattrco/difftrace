@@ -168,7 +168,8 @@ func (s *Scanner) scanString() (tok Token, lit string) {
 			break
 		}
 		if r == '"' {
-			// Consume ellipsis if present.
+			buf.WriteRune(r)
+			// Reached end of literal. Consume ellipsis if present.
 			if r = s.read(); r == '.' {
 				s.read()
 				s.read()
@@ -176,7 +177,6 @@ func (s *Scanner) scanString() (tok Token, lit string) {
 			} else {
 				s.unreadRune()
 			}
-			buf.WriteRune(r)
 			break
 		}
 		buf.WriteRune(r)
