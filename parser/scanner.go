@@ -141,12 +141,12 @@ func (s *Scanner) scanAddress() (tok Token, lit string) {
 	// Prepend 0x as memory addresses are always hex.
 	buf.WriteString("0x")
 
-	// Read up to the next whitespace rune.
+	// Read until there are no letters or digits.
 	for {
 		r := s.read()
 		if r == eof {
 			break
-		} else if isWhitespace(r) || r == '\n' {
+		} else if !(isDigit(r) || isLetter(r)) {
 			s.unreadRune()
 			break
 		}
