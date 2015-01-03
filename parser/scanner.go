@@ -146,7 +146,7 @@ func (s *Scanner) scanAddress() (tok Token, lit string) {
 		r := s.read()
 		if r == eof {
 			break
-		} else if isWhitespace(r) {
+		} else if isWhitespace(r) || r == '\n' {
 			s.unreadRune()
 			break
 		}
