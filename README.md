@@ -7,7 +7,7 @@ Normally when you run strace, memory addresses, timestamps and other things will
 
 ![coloured diff of strace output](diff.png)
 
-`difftrace` replaces some of these things with placeholders. In the example above, there is no difference between outputs once the memory addresses have been substituted.
+`difftrace` replaces some of these things with placeholders (currently just memory addresses). In the example above, there is no difference between outputs once the memory addresses have been substituted.
 
 `difftrace` reads from stdin and outputs to stdout:
 
@@ -16,3 +16,5 @@ cat strace_run.out | difftrace
 ```
 
 Currently it doesn't handle all possible outputs, but it does handle the simple cases. A lexer and parser have been implemented so that extending what it does is easier.
+
+Implementation inspired by Ben Johnson's [post on handwritten parsers](http://blog.gopheracademy.com/advent-2014/parsers-lexers/).
