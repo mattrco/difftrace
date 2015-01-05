@@ -94,14 +94,17 @@ func (s *Scanner) Scan() (tok Token, lit string) {
 		}
 	} else if r == '-' {
 		// - could be a signal (lines start with ---).
-		if r := s.read(); r == '-' {
-			if r := s.read(); r == '-' {
+		r = s.read()
+		if r == '-' {
+			r = s.read()
+			if r == '-' {
 				return SIGNAL, "---"
-			} else {
-				s.unreadRunes(2)
 			}
-		} else {
+		} else if isDigit(r) {
 			s.unreadRune()
+			return s.scanNegative()
+		} else {
+			return ILLEGAL, ""
 		}
 	} else if r == '"' {
 		return s.scanString()
@@ -230,10 +233,29 @@ func (s *Scanner) scanIdent() (tok Token, lit string) {
 			s.unreadRune()
 			break
 		} else {
-			_, _ = buf.WriteRune(r)
+			buf.WriteRune(r)
 		}
 	}
 
 	// Otherwise return as a regular identifier.
+	return IDENT, buf.String()
+}
+
+func (s *Scanner) scanNegative() (tok Token, lit string) {
+	var buf bytes.Buffer
+	buf.WriteRune('-')
+
+	for {
+		if r := s.read(); r == eof {
+			break
+		} else if !isDigit(r) {
+			s.unreadRune()
+			break
+		} else {
+			buf.WriteRune(r)
+		}
+	}
+
+	// Return as a regular identifier.
 	return IDENT, buf.String()
 }
